@@ -39,40 +39,42 @@ Reflection kullanılarak Spring context'teki tüm `PaymentProcessor` implementas
 
 ## Proje Yapısı
 
-    src/main/java/com/example/payment/
-    │
-    ├── PaymentApplication.java
-    │
-    ├── config/
-    │   └── OpenApiConfig.java
-    │
-    ├── controller/
-    │   └── PaymentController.java
-    │
-    ├── service/
-    │   └── PaymentService.java
-    │
-    ├── processor/
-    │   ├── PaymentProcessor.java          ← Interface
-    │   ├── registry/
-    │   │   └── PaymentProcessorRegistry.java
-    │   └── impl/
-    │       ├── CreditCardProcessor.java
-    │       └── PayPalProcessor.java
-    │
-    ├── model/
-    │   ├── request/
-    │   │   └── PaymentRequest.java
-    │   ├── response/
-    │   │   ├── PaymentResponse.java
-    │   │   └── ErrorResponse.java
-    │   └── dto/
-    │       └── PaymentDTO.java
-    │
-    └── exception/
-        ├── UnsupportedPaymentMethodException.java
-        ├── InvalidPaymentRequestException.java
-        └── GlobalExceptionHandler.java
+<pre>
+src/main/java/com/example/payment/
+│
+├── PaymentApplication.java
+│
+├── config/
+│   └── OpenApiConfig.java
+│
+├── controller/
+│   └── PaymentController.java
+│
+├── service/
+│   └── PaymentService.java
+│
+├── processor/
+│   ├── PaymentProcessor.java
+│   ├── registry/
+│   │   └── PaymentProcessorRegistry.java
+│   └── impl/
+│       ├── CreditCardProcessor.java
+│       └── PayPalProcessor.java
+│
+├── model/
+│   ├── request/
+│   │   └── PaymentRequest.java
+│   ├── response/
+│   │   ├── PaymentResponse.java
+│   │   └── ErrorResponse.java
+│   └── dto/
+│       └── PaymentDTO.java
+│
+└── exception/
+    ├── UnsupportedPaymentMethodException.java
+    ├── InvalidPaymentRequestException.java
+    └── GlobalExceptionHandler.java
+</pre>
 
 ---
 
