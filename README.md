@@ -66,7 +66,6 @@ src/main/java/com/example/payment/
 │   │   └── PaymentRequest.java
 │   ├── response/
 │   │   ├── PaymentResponse.java
-│   │   └── ErrorResponse.java
 │   └── dto/
 │       └── PaymentDTO.java
 │
