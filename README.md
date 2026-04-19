@@ -38,45 +38,48 @@ Reflection kullanılarak Spring context'teki tüm `PaymentProcessor` implementas
 ---
 
 ## Proje Yapısı
-src/main/java/com/example/payment/
-│
-├── PaymentApplication.java
-│
-├── config/
-│   └── OpenApiConfig.java
-│
-├── controller/
-│   └── PaymentController.java
-│
-├── service/
-│   └── PaymentService.java
-│
-├── processor/
-│   ├── PaymentProcessor.java          ← Interface
-│   ├── registry/
-│   │   └── PaymentProcessorRegistry.java
-│   └── impl/
-│       ├── CreditCardProcessor.java
-│       └── PayPalProcessor.java
-│
-├── model/
-│   ├── request/
-│   │   └── PaymentRequest.java
-│   ├── response/
-│   │   ├── PaymentResponse.java
-│   └── dto/
-│       └── PaymentDTO.java
-│
-└── exception/
-├── UnsupportedPaymentMethodException.java
-├── InvalidPaymentRequestException.java
-└── GlobalExceptionHandler.java
+
+    src/main/java/com/example/payment/
+    │
+    ├── PaymentApplication.java
+    │
+    ├── config/
+    │   └── OpenApiConfig.java
+    │
+    ├── controller/
+    │   └── PaymentController.java
+    │
+    ├── service/
+    │   └── PaymentService.java
+    │
+    ├── processor/
+    │   ├── PaymentProcessor.java          ← Interface
+    │   ├── registry/
+    │   │   └── PaymentProcessorRegistry.java
+    │   └── impl/
+    │       ├── CreditCardProcessor.java
+    │       └── PayPalProcessor.java
+    │
+    ├── model/
+    │   ├── request/
+    │   │   └── PaymentRequest.java
+    │   ├── response/
+    │   │   ├── PaymentResponse.java
+    │   │   └── ErrorResponse.java
+    │   └── dto/
+    │       └── PaymentDTO.java
+    │
+    └── exception/
+        ├── UnsupportedPaymentMethodException.java
+        ├── InvalidPaymentRequestException.java
+        └── GlobalExceptionHandler.java
 
 ---
 
 ## SOLID Prensipleri
 
 ### Single Responsibility Principle (SRP)
+
 Her sınıfın tek bir sorumluluğu vardır.
 
 - `PaymentController` → HTTP isteğini alır, service'e iletir
@@ -86,20 +89,24 @@ Her sınıfın tek bir sorumluluğu vardır.
 - `GlobalExceptionHandler` → Tüm hataları merkezi olarak yönetir
 
 ### Open/Closed Principle (OCP)
+
 Sistem yeni ödeme yöntemlerine **açık**, mevcut koda değişime **kapalıdır**.
 
 Yeni bir ödeme yöntemi eklemek için `PaymentProcessor` interface'ini implement eden
 yeni bir `@Component` sınıf yazmak yeterlidir. Başka hiçbir dosyaya dokunulmaz.
 
 ### Liskov Substitution Principle (LSP)
+
 Tüm `PaymentProcessor` implementasyonları birbirinin yerine geçebilir.
-`Registry` hangi processor'ı döndürdüğünden bağımsız olarak `process()` metodunu çağırır.
+Registry hangi processor'ı döndürdüğünden bağımsız olarak `process()` metodunu çağırır.
 
 ### Interface Segregation Principle (ISP)
+
 `PaymentProcessor` interface'i yalnızca `getPaymentMethod()` ve `process()` metodlarını içerir.
 Implementasyonlar ihtiyaç duymadıkları hiçbir metodu implement etmek zorunda kalmaz.
 
 ### Dependency Inversion Principle (DIP)
+
 Tüm sınıflar somut implementasyonlara değil, soyutlamalara bağımlıdır.
 
 - `PaymentService` → `PaymentProcessorRegistry`'e bağımlı, somut processor'ları bilmez
@@ -130,23 +137,26 @@ for (Class<?> iface : processor.getClass().getInterfaces()) {
 ---
 
 ## Katman Mimarisi
+
+```
 PaymentRequest   →  HTTP'den gelen ham veri (validation burada)
-↓ map
+      ↓ map
 PaymentDTO       →  Service ve Processor katmanları arasında taşınan nesne
-↓ işlenir
+      ↓ işlenir
 PaymentResponse  →  Başarılı HTTP cevabı
 ErrorResponse    →  Hatalı HTTP cevabı
+```
 
 ---
 
 ## Kurulum
 
-### Gereksinimler
+**Gereksinimler**
 
 - Java 17+
 - Maven 3.8+
 
-### Adımlar
+**Adımlar**
 
 ```bash
 # Repoyu klonla
@@ -165,17 +175,22 @@ Uygulama `http://localhost:8080` adresinde ayağa kalkar.
 
 ### Swagger UI
 
-http://localhost:8080/swagger-ui.html
+Tüm endpoint'leri görüntülemek ve test etmek için:
 
-Tüm endpoint'leri görüntüleyebilir ve "Try it out" ile direkt istek atabilirsin.
+```
+http://localhost:8080/swagger-ui.html
+```
 
 ---
 
 ### Desteklenen ödeme yöntemlerini listele
 
+```
 GET /api/v1/payments/methods
+```
 
 **Response (200)**
+
 ```json
 ["CREDIT_CARD", "PAYPAL"]
 ```
@@ -184,9 +199,12 @@ GET /api/v1/payments/methods
 
 ### Ödeme işlemi gerçekleştir
 
+```
 POST /api/v1/payments/process
+```
 
 **Request Body**
+
 ```json
 {
   "paymentMethod": "CREDIT_CARD",
@@ -197,6 +215,7 @@ POST /api/v1/payments/process
 ```
 
 **Response (200)**
+
 ```json
 {
   "success": true,
@@ -210,6 +229,7 @@ POST /api/v1/payments/process
 ```
 
 **Response (400) — Desteklenmeyen yöntem**
+
 ```json
 {
   "success": false,
@@ -219,6 +239,7 @@ POST /api/v1/payments/process
 ```
 
 **Response (400) — Validation hatası**
+
 ```json
 {
   "success": false,
