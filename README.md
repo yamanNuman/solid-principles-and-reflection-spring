@@ -28,8 +28,8 @@ Reflection kullanılarak Spring context'teki tüm `PaymentProcessor` implementas
 
 ## Teknolojiler
 
-- Java 17
-- Spring Boot 3.4.x
+- Java 21
+- Spring Boot 3.5.13
 - Spring Web
 - Spring Validation
 - Lombok
